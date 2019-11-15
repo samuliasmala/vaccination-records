@@ -6,7 +6,8 @@
     "prestart": "sequelize-cli db:migrate",
     "start": "node ./bin/www",
     "dev": "DEBUG=backend:* node ./bin/www",
-    "db": "npx sequelize-cli db:migrate"
+    "db": "npx sequelize-cli db:migrate",
+    "prettier": "prettier --write '**/*.{js,json,html,md,css,scss}'"
   },
   "dependencies": {
     "connect-session-sequelize": "^6.0.0",
