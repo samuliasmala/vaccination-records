@@ -5,7 +5,7 @@
   "scripts": {
     "prestart": "sequelize-cli db:migrate",
     "start": "node ./bin/www",
-    "dev": "DEBUG=backend:* node ./bin/www",
+    "dev": "DEBUG=backend:* nodemon ./bin/www",
     "db": "npx sequelize-cli db:migrate",
     "prettier": "prettier --write '**/*.{js,json,html,md,css,scss}'"
   },
@@ -29,6 +29,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "husky": "^3.0.9",
     "lint-staged": "^9.4.2",
+    "nodemon": "^1.19.4",
     "prettier": "1.19.1"
   },
   "husky": {
