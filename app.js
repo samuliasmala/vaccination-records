@@ -1,20 +1,20 @@
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var Sequelize = require('sequelize');
+var morgan = require('morgan');
 
 var session = require('express-session');
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
 
+var { sequelize } = require('./models');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var config = require(path.resolve('config.js'));
+var log = require('./utils/logger');
 var app = express();
-var sequelize = new Sequelize(config.get('DATABASE_URL'));
 
-app.use(logger('dev'));
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(config.get('SESSION_SECRET')));

@@ -3,12 +3,17 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
+
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-var config = require(path.resolve('config.js'));
+
+const config = require(path.resolve('config.js'));
+const log = require('../utils/logger');
+
 const db = {};
 
-let sequelize = new Sequelize(config.get('DATABASE_URL'));
+const sequelize = new Sequelize(config.get('DATABASE_URL'), {
+  logging: msg => log.debug(msg)
+});
 
 fs.readdirSync(__dirname)
   .filter(file => {
