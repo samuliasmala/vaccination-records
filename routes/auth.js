@@ -69,4 +69,19 @@ router.get('/logout', (req, res, next) => {
   return res.status(200).json({ status: 'Logged out' });
 });
 
+/**
+ * @api {get} /version Get application version number
+ * @apiName VersionInfo
+ * @apiGroup Authentication
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "version": "0.1.0"
+ *     }
+ */
+router.get('/version', (req, res, next) => {
+  return res.status(200).json({ version: process.env.npm_package_version });
+});
+
 module.exports = router;
