@@ -2,13 +2,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var morgan = require('morgan');
-
+var passport = require('passport');
 var session = require('express-session');
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 var { sequelize } = require('./models');
 var routes = require('./routes');
-
+var setupPassport = require('./utils/passport');
 var config = require(path.resolve('config.js'));
 var log = require('./utils/logger');
 var app = express();
@@ -31,6 +31,11 @@ app.use(
     saveUninitialized: true
   })
 );
+
+// Setup passport
+setupPassport(passport);
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
 
 app.use(express.static(path.join(__dirname, 'build')));
 
