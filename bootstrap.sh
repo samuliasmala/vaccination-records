@@ -6,6 +6,9 @@ sudo apt update
 sudo apt upgrade -y
 sudo apt install -y postgresql postgresql-contrib
 
+# bcrypt requirements
+sudo apt install -y python build-essential
+
 # Set timezone to Helsinki
 echo "Europe/Helsinki" | sudo tee /etc/timezone
 sudo unlink /etc/localtime
