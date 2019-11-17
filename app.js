@@ -41,6 +41,8 @@ app.use(passport.session()); // persistent login sessions
 // Add API routes
 app.use('/api', routes);
 
+// Forward bare domain to apidoc
+app.get('/', (req, res) => res.redirect('/apidoc/'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next) {
