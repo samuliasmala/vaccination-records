@@ -7,8 +7,7 @@ var session = require('express-session');
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 var { sequelize } = require('./models');
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var routes = require('./routes');
 
 var config = require(path.resolve('config.js'));
 var log = require('./utils/logger');
@@ -33,9 +32,9 @@ app.use(
   })
 );
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'build')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// Add API routes
+app.use('/api', routes);
 
 module.exports = app;
