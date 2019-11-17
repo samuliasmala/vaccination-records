@@ -43,8 +43,13 @@ async function findByUsername(username) {
   return user;
 }
 
+async function checkUserPassword(password, hash) {
+  return await bcrypt.compare(password, hash);
+}
+
 module.exports = {
   findUserById,
   createUser,
-  findByUsername
+  findByUsername,
+  checkUserPassword
 };

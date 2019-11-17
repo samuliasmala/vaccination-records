@@ -17,7 +17,11 @@ function setupPassport(passport) {
         log.debug('User not found');
         return cb(null, false);
       }
-      if (user.password != password) {
+      const match = await UserService.checkUserPassword(
+        password,
+        user.password_hash
+      );
+      if (match !== true) {
         log.debug('Incorrect password when logging in');
         return cb(null, false);
       }
@@ -46,7 +50,7 @@ function setupPassport(passport) {
 
   passport.deserializeUser(async function(id, done) {
     try {
-      const user = await UserService.findUserById(user.id);
+      const user = await UserService.findUserById(id);
       if (user) {
         done(null, user);
       } else {

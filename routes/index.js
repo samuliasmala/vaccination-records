@@ -3,6 +3,7 @@ const express = require('express');
 let router = express.Router();
 const log = require('../utils/logger');
 
+let authRoutes = require('./auth');
 let userRoutes = require('./user');
 
 // Log all API calls
@@ -13,6 +14,7 @@ let userRoutes = require('./user');
 });*/
 
 // Add all routes
+router.use('/', authRoutes);
 router.use('/user', userRoutes);
 
 module.exports = router;
