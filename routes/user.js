@@ -3,6 +3,7 @@ var createError = require('http-errors');
 var router = express.Router();
 
 const log = require('../utils/logger');
+const { ensureAuthenticated } = require('../utils/middlewares');
 
 const UserService = require('../services/UserService');
 
@@ -34,18 +35,14 @@ const UserService = require('../services/UserService');
  *      "error": "UserNotLoggedIn"
  *    }
  */
-router.get('/', (req, res, next) => {
-  if (req.isAuthenticated() && req.user) {
-    let { id, username, default_reminder_email, year_born } = req.user;
-    return res.status(200).json({
-      id,
-      username,
-      default_reminder_email,
-      year_born
-    });
-  } else {
-    return res.status(401).json({ error: 'UserNotLoggedIn' });
-  }
+router.get('/', ensureAuthenticated, (req, res, next) => {
+  let { id, username, default_reminder_email, year_born } = req.user;
+  return res.status(200).json({
+    id,
+    username,
+    default_reminder_email,
+    year_born
+  });
 });
 
 /**
@@ -105,7 +102,7 @@ router.post('/create', async (req, res, next) => {
  *       "year_born": true
  *     }
  */
-router.put('/update', async (req, res, next) => {
+router.put('/update', ensureAuthenticated, async (req, res, next) => {
   let user = req.user;
   log.debug(`Updating user`, { id: user.id });
 
