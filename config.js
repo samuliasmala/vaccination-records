@@ -10,6 +10,12 @@ const config = convict({
     format: ['production', 'development', 'test'],
     doc: 'The application environment.'
   },
+  PORT: {
+    env: 'PORT',
+    default: 3000,
+    format: 'port',
+    doc: 'The port to start the http-server.'
+  },
   LOG_LEVEL: {
     env: 'LOG_LEVEL',
     default: 'info',

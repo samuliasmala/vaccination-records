@@ -5,16 +5,16 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('backend:server');
 var http = require('http');
 
+var config = require('../config');
 var logger = require('../utils/logger');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(config.get('PORT') || '3000');
 app.set('port', port);
 
 /**
