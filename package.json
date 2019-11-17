@@ -6,11 +6,13 @@
     "prestart": "sequelize-cli db:migrate",
     "start": "node ./bin/www",
     "dev": "LOG_LEVEL=debug nodemon ./bin/www",
+    "build": "rm -rf public && apidoc -i routes/ -o public/apidoc/ && sed -i 's|<body class=\"container-fluid\">|<body>|g' public/apidoc/index.html",
     "db": "npx sequelize-cli db:migrate",
     "debugger": "LOG_LEVEL=debug node --inspect-brk=0.0.0.0:9229 ./bin/www",
     "prettier": "prettier --write '**/*.{js,json,html,md,css,scss}'"
   },
   "dependencies": {
+    "apidoc": "^0.18.0",
     "bcrypt": "^3.0.6",
     "connect-session-sequelize": "^6.0.0",
     "convict": "^5.1.0",
@@ -51,5 +53,10 @@
       "prettier --write",
       "git add"
     ]
+  },
+  "apidoc": {
+    "name": "Vaccination eRecord API documentation",
+    "version": "1.0.0",
+    "description": "Description of Vaccination eRecord API documentation. "
   }
 }

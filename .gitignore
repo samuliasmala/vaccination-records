@@ -1,3 +1,6 @@
+# Public dir, built on runtime
+public
+
 # Logs
 logs
 *.log

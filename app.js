@@ -38,10 +38,10 @@ setupPassport(passport);
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 
-app.use(express.static(path.join(__dirname, 'build')));
-
 // Add API routes
 app.use('/api', routes);
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next) {
   next(createError(404));
