@@ -61,6 +61,7 @@
   "apidoc": {
     "name": "Vaccination eRecord API documentation",
     "version": "1.0.0",
-    "description": "Description of Vaccination eRecord API documentation. "
+    "description": "Description of Vaccination eRecord API documentation. ",
+    "url": "https://vaccine-backend.herokuapp.com/api"
   }
 }
