@@ -39,6 +39,10 @@
     "nodemon": "^1.19.4",
     "prettier": "1.19.1"
   },
+  "engines": {
+    "node": "12.x",
+    "npm": "6.x"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
