@@ -1,4 +1,5 @@
 var express = require('express');
+var createError = require('http-errors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var morgan = require('morgan');
@@ -41,5 +42,22 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 // Add API routes
 app.use('/api', routes);
+
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+app.use(function(err, req, res, next) {
+  err.status = err.status || 500;
+
+  if (err.status >= 500) {
+    log.error(`Internal server error: `, err);
+  }
+
+  res.status(err.status);
+  res.json({
+    error: err.message
+  });
+});
 
 module.exports = app;
