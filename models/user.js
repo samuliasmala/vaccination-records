@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       username: {
         allowNull: false,
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        unique: true
       },
       password_hash: {
         allowNull: false,
@@ -20,7 +21,14 @@ module.exports = (sequelize, DataTypes) => {
       default_reminder_email: DataTypes.STRING,
       year_born: DataTypes.INTEGER
     },
-    {}
+    {
+      indexes: [
+        {
+          unique: true,
+          fields: ['username']
+        }
+      ]
+    }
   );
   User.associate = function(models) {
     User.hasMany(models.Dose, {
