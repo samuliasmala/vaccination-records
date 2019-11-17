@@ -23,7 +23,7 @@ async function createUser(username, password, reminderEmail, yearBorn) {
     };
   }
 
-  let hash = await bcrypt.hash(password, saltRounds);
+  let hash = await createHashFromPassword(password);
   let user = await User.create({
     username: username,
     password_hash: hash,
@@ -44,12 +44,17 @@ async function findByUsername(username) {
 }
 
 async function checkUserPassword(password, hash) {
-  return await bcrypt.compare(password, hash);
+  return bcrypt.compare(password, hash);
+}
+
+async function createHashFromPassword(password) {
+  return bcrypt.hash(password, saltRounds);
 }
 
 module.exports = {
   findUserById,
   createUser,
   findByUsername,
+  createHashFromPassword,
   checkUserPassword
 };
