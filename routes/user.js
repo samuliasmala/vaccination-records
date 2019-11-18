@@ -106,8 +106,6 @@ router.put('/update', ensureAuthenticated, async (req, res, next) => {
   let user = req.user;
   log.debug(`Updating user`, { id: user.id });
 
-  debugger;
-
   let newData = {};
 
   // Check which fields are updated
