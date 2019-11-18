@@ -6,7 +6,7 @@
     "prestart": "sequelize-cli db:migrate",
     "start": "node ./bin/www",
     "dev": "LOG_LEVEL=debug nodemon ./bin/www",
-    "build": "rm -rf public && apidoc -i routes/ -o public/apidoc/ && sed -i 's|<body class=\"container-fluid\">|<body>|g' public/apidoc/index.html",
+    "build": "rm -rf bu && apidoc -i routes/ -o build/apidoc/ && sed -i 's|<body class=\"container-fluid\">|<body>|g' build/apidoc/index.html",
     "db": "npx sequelize-cli db:migrate",
     "debugger": "LOG_LEVEL=debug node --inspect-brk=0.0.0.0:9229 ./bin/www",
     "prettier": "prettier --write '**/*.{js,json,html,md,css,scss}'"
