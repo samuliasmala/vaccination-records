@@ -36,13 +36,17 @@ const UserService = require('../services/UserService');
  *    }
  */
 router.get('/', ensureAuthenticated, (req, res, next) => {
-  let { id, username, default_reminder_email, year_born } = req.user;
-  return res.status(200).json({
-    id,
-    username,
-    default_reminder_email,
-    year_born
-  });
+  try {
+    let { id, username, default_reminder_email, year_born } = req.user;
+    return res.status(200).json({
+      id,
+      username,
+      default_reminder_email,
+      year_born
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
@@ -103,52 +107,56 @@ router.post('/create', async (req, res, next) => {
  *     }
  */
 router.put('/update', ensureAuthenticated, async (req, res, next) => {
-  let user = req.user;
-  log.debug(`Updating user`, { id: user.id });
+  try {
+    let user = req.user;
+    log.debug(`Updating user`, { id: user.id });
 
-  let newData = {};
+    let newData = {};
 
-  // Check which fields are updated
-  if (req.body.new_password != null) {
-    let match = await UserService.checkUserPassword(
-      req.body.old_password,
-      user.password_hash
-    );
-    if (match) {
-      newData.password_hash = await UserService.createHashFromPassword(
-        req.body.new_password
+    // Check which fields are updated
+    if (req.body.new_password != null) {
+      let match = await UserService.checkUserPassword(
+        req.body.old_password,
+        user.password_hash
       );
+      if (match) {
+        newData.password_hash = await UserService.createHashFromPassword(
+          req.body.new_password
+        );
+      }
     }
-  }
 
-  if (
-    'default_reminder_email' in req.body &&
-    req.body.default_reminder_email != user.default_reminder_email
-  ) {
-    newData.default_reminder_email = req.body.default_reminder_email;
-  }
-
-  if ('year_born' in req.body && req.body.year_born != user.year_born) {
-    newData.year_born = req.body.year_born;
-  }
-
-  // Update user object if any of the fields were updated
-  if (Object.entries(newData).length > 0) {
-    let userDb = await UserService.findUserById(req.user.id);
-
-    if (userDb == null) {
-      log.warn('User not found from DB when updating', { id: req.user.id });
-      return next(createError(404, 'User not found'));
+    if (
+      'default_reminder_email' in req.body &&
+      req.body.default_reminder_email != user.default_reminder_email
+    ) {
+      newData.default_reminder_email = req.body.default_reminder_email;
     }
-    await userDb.update(newData);
-  }
 
-  let status = {};
-  for (let i in newData) {
-    status[i] = true;
-  }
+    if ('year_born' in req.body && req.body.year_born != user.year_born) {
+      newData.year_born = req.body.year_born;
+    }
 
-  return res.status(200).json(status);
+    // Update user object if any of the fields were updated
+    if (Object.entries(newData).length > 0) {
+      let userDb = await UserService.findUserById(req.user.id);
+
+      if (userDb == null) {
+        log.warn('User not found from DB when updating', { id: req.user.id });
+        return next(createError(404, 'User not found'));
+      }
+      await userDb.update(newData);
+    }
+
+    let status = {};
+    for (let i in newData) {
+      status[i] = true;
+    }
+
+    return res.status(200).json(status);
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;

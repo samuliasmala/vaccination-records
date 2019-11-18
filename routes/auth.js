@@ -22,33 +22,37 @@ const UserService = require('../services/UserService');
  *     }
  */
 router.post('/login', (req, res, next) => {
-  let { username } = req.body;
-  log.debug(`User logging in`, { username });
+  try {
+    let { username } = req.body;
+    log.debug(`User logging in`, { username });
 
-  passport.authenticate('local', function(err, user, info) {
-    // Error in login process
-    if (err) {
-      return next(err);
-    }
-
-    // Login was not successfull
-    if (!user) {
-      log.debug(`Invalid username or password`, { username });
-      return res.status(401).json({ status: 'Unauthorized' });
-    }
-
-    return req.logIn(user, function(err) {
+    passport.authenticate('local', function(err, user, info) {
+      // Error in login process
       if (err) {
         return next(err);
       }
 
-      log.info('User logged in', {
-        username: username,
-        session: req.session.id.slice(0, 6)
+      // Login was not successfull
+      if (!user) {
+        log.debug(`Invalid username or password`, { username });
+        return res.status(401).json({ status: 'Invalid username or password' });
+      }
+
+      return req.logIn(user, function(err) {
+        if (err) {
+          return next(err);
+        }
+
+        log.info('User logged in', {
+          username: username,
+          session: req.session.id.slice(0, 6)
+        });
+        return res.status(200).json({ status: 'Authorized' });
       });
-      return res.status(200).json({ status: 'Authorized' });
-    });
-  })(req, res, next);
+    })(req, res, next);
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
