@@ -1,6 +1,6 @@
-var express = require('express');
-var createError = require('http-errors');
-var router = express.Router();
+const express = require('express');
+const createError = require('http-errors');
+const router = express.Router();
 
 const log = require('../utils/logger');
 const { ensureAuthenticated } = require('../utils/middlewares');

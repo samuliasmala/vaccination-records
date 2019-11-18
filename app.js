@@ -1,18 +1,18 @@
-var express = require('express');
-var createError = require('http-errors');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var morgan = require('morgan');
-var passport = require('passport');
-var session = require('express-session');
-var SequelizeStore = require('connect-session-sequelize')(session.Store);
+const express = require('express');
+const createError = require('http-errors');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
+const passport = require('passport');
+const session = require('express-session');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
-var { sequelize } = require('./models');
-var routes = require('./routes');
-var setupPassport = require('./utils/passport');
-var config = require(path.resolve('config.js'));
-var log = require('./utils/logger');
-var app = express();
+const { sequelize } = require('./models');
+const routes = require('./routes');
+const setupPassport = require('./utils/passport');
+const config = require(path.resolve('config.js'));
+const log = require('./utils/logger');
+const app = express();
 
 app.use(morgan('dev'));
 app.use(express.json());

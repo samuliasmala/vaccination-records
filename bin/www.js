@@ -4,11 +4,11 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var http = require('http');
+const app = require('../app');
+const http = require('http');
 
-var config = require('../config');
-var logger = require('../utils/logger');
+const config = require('../config');
+const logger = require('../utils/logger');
 
 /**
  * Get port from environment and store in Express.

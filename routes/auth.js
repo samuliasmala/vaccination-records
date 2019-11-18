@@ -1,7 +1,7 @@
-var express = require('express');
-var createError = require('http-errors');
-var passport = require('passport');
-var router = express.Router();
+const express = require('express');
+const createError = require('http-errors');
+const passport = require('passport');
+const router = express.Router();
 
 const log = require('../utils/logger');
 

@@ -1,4 +1,4 @@
-var createError = require('http-errors');
+const createError = require('http-errors');
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated() && req.user) {
