@@ -3,7 +3,6 @@ const createError = require('http-errors');
 const router = express.Router();
 
 const log = require('../utils/logger');
-const { ensureAuthenticated } = require('../utils/middlewares');
 
 const VaccineService = require('../services/VaccineService');
 

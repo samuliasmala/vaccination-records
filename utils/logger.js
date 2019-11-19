@@ -4,7 +4,7 @@ const { combine, timestamp, colorize, printf } = format;
 const config = require('../config');
 
 const myFormat = printf(info => {
-  let { level, message, label, timestamp, stack, ...rest } = info;
+  let { level, message, timestamp, stack, ...rest } = info;
   message += stack == null ? '' : `\n${info.stack}`;
   return `${timestamp} [${level}]: ${message} ${
     Object.entries(rest).length > 0 ? JSON.stringify(rest) : ''

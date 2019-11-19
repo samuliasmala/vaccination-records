@@ -1,11 +1,8 @@
 const express = require('express');
-const createError = require('http-errors');
 const passport = require('passport');
 const router = express.Router();
 
 const log = require('../utils/logger');
-
-const UserService = require('../services/UserService');
 
 /**
  * @api {post} /login User login

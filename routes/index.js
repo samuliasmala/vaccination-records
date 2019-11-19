@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 
 const router = express.Router();
-const log = require('../utils/logger');
 const { ensureAuthenticated } = require('../utils/middlewares');
 
 const authRoutes = require('./auth');
