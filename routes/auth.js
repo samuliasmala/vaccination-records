@@ -80,9 +80,10 @@ router.get('/logout', (req, res, next) => {
 });
 
 /**
- * @api {get} /version Get application version number
+ * @api {get} /version Get version number
  * @apiName VersionInfo
  * @apiGroup Authentication
+ * @apiDescription Get application version number as it is defined in package.json
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK

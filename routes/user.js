@@ -8,10 +8,11 @@ const { ensureAuthenticated } = require('../utils/middlewares');
 const UserService = require('../services/UserService');
 
 /**
- * @api {get} /user Get details of the current (logged in) user
+ * @api {get} /user Get user details
  * @apiName GetUser
  * @apiGroup User
  * @apiPermission logged in
+ * @apiDescription Get details of the current (logged in) user
  *
  * @apiSuccess {Number}   id id of the user
  * @apiSuccess {String}   username User's username (i.e. user's primary email)
@@ -50,7 +51,7 @@ router.get('/', ensureAuthenticated, (req, res, next) => {
 });
 
 /**
- * @api {post} /user/create Create new user
+ * @api {post} /user Create new user
  * @apiName CreateUser
  * @apiGroup User
  *
@@ -73,7 +74,7 @@ router.get('/', ensureAuthenticated, (req, res, next) => {
  *      "id": 5
  *     }
  */
-router.post('/create', async (req, res, next) => {
+router.post(['/', '/create'], async (req, res, next) => {
   try {
     let { username, password, default_reminder_email, year_born } = req.body;
     log.debug(`Create user`, { username, default_reminder_email, year_born });
@@ -98,7 +99,7 @@ router.post('/create', async (req, res, next) => {
 });
 
 /**
- * @api {put} /user/update Update user details
+ * @api {put} /user Update user details
  * @apiName UpdateUser
  * @apiGroup User
  * @apiDescription Updates logged in user details. Return true for value which were updated
@@ -125,7 +126,7 @@ router.post('/create', async (req, res, next) => {
     "year_born": true
 }
  */
-router.put('/update', ensureAuthenticated, async (req, res, next) => {
+router.put(['/', '/update'], ensureAuthenticated, async (req, res, next) => {
   try {
     let user = req.user;
     log.debug(`Updating user`, { id: user.id });

@@ -9,10 +9,11 @@ const log = require('../utils/logger');
 const DoseService = require('../services/DoseService');
 
 /**
- * @api {get} /dose Get all dosess for the current (logged in) user
+ * @api {get} /dose Get all doses
  * @apiName GetDose
  * @apiGroup Dose
  * @apiPermission logged in
+ * @apiDescription Get all dosess for the current (logged in) user
  *
  * @apiSuccess {Object[]} doses List of doses
  * @apiSuccess {Number}   doses.id id of the dose
