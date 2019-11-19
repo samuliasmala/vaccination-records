@@ -160,19 +160,17 @@ router.post('/', async (req, res, next) => {
  * @apiParam {String}   [comment] User's comment for the dose, e.g. place taken
  *
  * @apiParamExample {json} Request-Example:
- {
-      "vaccine_id": "3",
-      "date_taken": "27.2.1985",
-      "booster_due_date": "31.12.2022",
-      "booster_email_reminder": "true",
-      "booster_reminder_address": "remind.me@email",
-      "comment": "Place taken: hospital"
+ PUT /api/dose/10
+{
+  "comment": "Note: the date taken was changed",
+  "date_taken": "1.2.2003"
 }
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
 {
-    "id": 10
+    "date_taken": true,
+    "comment": true
 }
  */
 router.put('/:id', async (req, res, next) => {
