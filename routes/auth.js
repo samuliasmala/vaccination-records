@@ -15,6 +15,12 @@ const UserService = require('../services/UserService');
  * @apiParam {String}   username User's username (i.e. user's primary email)
  * @apiParam {String}   password User's password
  *
+ * @apiParamExample {json} Request-Example:
+{
+  "username": "samuli.testaa",
+  "password": "salasana"
+}
+ *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *     {

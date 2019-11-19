@@ -67,6 +67,12 @@ router.get('/', async (req, res, next) => {
  * @apiParam {String}   name Name of the vaccine
  * @apiParam {String}   abbreviation Abbreviation of the vaccine
  *
+ * @apiParamExample {json} Request-Example:
+{
+  "name": "Test vaccination",
+  "abbreviation": "test"
+}
+ *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *     {

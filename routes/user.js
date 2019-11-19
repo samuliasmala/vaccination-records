@@ -59,6 +59,14 @@ router.get('/', ensureAuthenticated, (req, res, next) => {
  * @apiParam {String}   [default_reminder_email] User's default reminder email if not equal to username
  * @apiParam {Number}   [year_born] User's birth year
  *
+ * @apiParamExample {json} Request-Example:
+{
+  "username": "samuli.testing",
+  "password": "salasana",
+  "default_reminder_email": "address@email",
+  "year_born": 1905
+}
+ *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *     {
@@ -100,11 +108,22 @@ router.post('/create', async (req, res, next) => {
  * @apiParam {String}   [default_reminder_email] User's default reminder email if not equal to username
  * @apiParam {Number}   [year_born] User's birth year
  *
+ * @apiParamExample {json} Request-Example:
+{
+  "default_reminder_email": "testiosoite@test",
+  "year_born": 2005,
+  "new_password": "uusi_salasana",
+  "old_password": "salasana"
+}
+ *
+ *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
- *     {
- *       "year_born": true
- *     }
+ {
+    "password_hash": true,
+    "default_reminder_email": true,
+    "year_born": true
+}
  */
 router.put('/update', ensureAuthenticated, async (req, res, next) => {
   try {

@@ -28,7 +28,19 @@ const DoseService = require('../services/DoseService');
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
-          // TODO
+[
+    {
+        "id": 10,
+        "vaccine_id": 53,
+        "vaccine_name": "Lavantautirokote",
+        "vaccine_abbreviation": "Typ",
+        "date_taken": "27.2.1985 00:00:00",
+        "booster_due_date": "31.12.2022 14:27:30",
+        "booster_email_reminder": true,
+        "booster_reminder_address": "remind.me@email",
+        "comment": "Place taken: hospital"
+    }
+]
 
  * @apiError (401) UserNotLoggedIn User must log in to access own profile description
  *
@@ -71,18 +83,28 @@ router.get('/', async (req, res, next) => {
  * @apiName CreateDose
  * @apiGroup Dose
  *
- * @apiSuccess {Number}   vaccine_id id of the vaccine
- * @apiSuccess {Date}     date_taken Date when the dose was taken
- * @apiSuccess {Date}     [booster_due_date] Date when the booster dose is due
- * @apiSuccess {Boolean}  [booster_email_reminder=false] Has user subscribed for booster email reminder
- * @apiSuccess {String}   [booster_reminder_address] Email address where booster email is sent
- * @apiSuccess {String}   [comment] User's comment for the dose, e.g. place taken
+ * @apiParam {Number}   vaccine_id id of the vaccine
+ * @apiParam {Date}     date_taken Date when the dose was taken
+ * @apiParam {Date}     [booster_due_date] Date when the booster dose is due
+ * @apiParam {Boolean}  [booster_email_reminder=false] Has user subscribed for booster email reminder
+ * @apiParam {String}   [booster_reminder_address] Email address where booster email is sent
+ * @apiParam {String}   [comment] User's comment for the dose, e.g. place taken
+ *
+ * @apiParamExample {json} Request-Example:
+ {
+      "vaccine_id": "3",
+      "date_taken": "27.2.1985",
+      "booster_due_date": "31.12.2022 14:27:30",
+      "booster_email_reminder": "true",
+      "booster_reminder_address": "remind.me@email",
+      "comment": "Place taken: hospital"
+}
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
- *     {
-        // TODO
- *     }
+{
+    "id": 10
+}
  */
 router.post('/', async (req, res, next) => {
   try {
