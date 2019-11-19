@@ -193,4 +193,32 @@ router.put('/:id', async (req, res, next) => {
   }
 });
 
+/**
+ * @api {delete} /dose/:id Delete dose
+ * @apiName DeleteDose
+ * @apiGroup Dose
+ * @apiParam {Number}   id id of the dose
+ *
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+{
+    "deleted": true
+}
+ */
+router.delete('/:id', async (req, res, next) => {
+  try {
+    // Check that the id is given
+    if (req.params.id == null) {
+      log.warn('id parameter is missing');
+      return next(createError(400, 'Invalid request: id parameter is missing'));
+    }
+
+    let deleteStatus = await DoseService.deleteDose(req.user.id, req.params.id);
+    return res.status(200).json({ deleted: deleteStatus });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

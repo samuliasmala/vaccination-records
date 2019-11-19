@@ -97,9 +97,21 @@ async function updateDose(userId, doseId, newData) {
   return status;
 }
 
+async function deleteDose(userId, doseId) {
+  let dose = await getDose(userId, doseId);
+
+  if (dose == null) {
+    throw new Error(`Dose ${doseId} not found!`);
+  }
+
+  await dose.destroy();
+  return true;
+}
+
 module.exports = {
   getAllDoses,
   getDose,
   updateDose,
+  deleteDose,
   createDose
 };
