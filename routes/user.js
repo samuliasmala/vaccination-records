@@ -4,6 +4,7 @@ const router = express.Router();
 
 const log = require('../utils/logger');
 const { ensureAuthenticated } = require('../utils/middlewares');
+const { getChangedFields } = require('../utils/utils');
 
 const UserService = require('../services/UserService');
 
@@ -129,9 +130,12 @@ router.post(['/', '/create'], async (req, res, next) => {
 router.put(['/', '/update'], ensureAuthenticated, async (req, res, next) => {
   try {
     let user = req.user;
-    log.debug(`Updating user`, { id: user.id });
 
-    let newData = {};
+    let newData = getChangedFields(
+      ['default_reminder_email', 'year_born'],
+      req.body,
+      user
+    );
 
     // Check which fields are updated
     if (req.body.new_password != null) {
@@ -146,16 +150,7 @@ router.put(['/', '/update'], ensureAuthenticated, async (req, res, next) => {
       }
     }
 
-    if (
-      'default_reminder_email' in req.body &&
-      req.body.default_reminder_email != user.default_reminder_email
-    ) {
-      newData.default_reminder_email = req.body.default_reminder_email;
-    }
-
-    if ('year_born' in req.body && req.body.year_born != user.year_born) {
-      newData.year_born = req.body.year_born;
-    }
+    log.debug(`Updating user`, { id: user.id, newData });
 
     // Update user object if any of the fields were updated
     if (Object.entries(newData).length > 0) {
