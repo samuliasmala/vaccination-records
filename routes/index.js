@@ -8,6 +8,7 @@ const { ensureAuthenticated } = require('../utils/middlewares');
 const authRoutes = require('./auth');
 const userRoutes = require('./user');
 const vaccineRoutes = require('./vaccine');
+const doseRoutes = require('./dose');
 
 // Log all API calls
 // Currently handled by Morgan
@@ -27,5 +28,6 @@ router.use(cors(corsOptions));
 router.use('/', authRoutes);
 router.use('/user', userRoutes);
 router.use('/vaccine', ensureAuthenticated, vaccineRoutes);
+router.use('/dose', ensureAuthenticated, doseRoutes);
 
 module.exports = router;

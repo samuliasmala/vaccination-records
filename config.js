@@ -34,6 +34,12 @@ const config = convict({
     default: 'oletussessiosekret',
     format: String,
     doc: 'The session secret to encrypt cookie'
+  },
+  DATE_FORMAT: {
+    env: 'DATE_FORMAT',
+    default: 'D.M.YYYY HH:mm:ss',
+    format: String,
+    doc: 'The date format used when parsing date strings'
   }
 });
 

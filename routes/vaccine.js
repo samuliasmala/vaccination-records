@@ -42,7 +42,7 @@ const VaccineService = require('../services/VaccineService');
  *      "error": "UserNotLoggedIn"
  *    }
  */
-router.get('/', ensureAuthenticated, async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     let vaccines = await VaccineService.getAllVaccines(req.user.id);
     return res.status(200).json(
