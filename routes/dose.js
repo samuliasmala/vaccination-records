@@ -147,4 +147,52 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+/**
+ * @api {put} /dose/:id Update dose
+ * @apiName UpdateDose
+ * @apiGroup Dose
+ * @apiParam {Number}   id id of the dose
+ * @apiParam {Number}   [vaccine_id] id of the vaccine
+ * @apiParam {Date}     [date_taken] Date when the dose was taken
+ * @apiParam {Date}     [booster_due_date] Date when the booster dose is due
+ * @apiParam {Boolean}  [booster_email_reminder=false] Has user subscribed for booster email reminder
+ * @apiParam {String}   [booster_reminder_address] Email address where booster email is sent
+ * @apiParam {String}   [comment] User's comment for the dose, e.g. place taken
+ *
+ * @apiParamExample {json} Request-Example:
+ {
+      "vaccine_id": "3",
+      "date_taken": "27.2.1985",
+      "booster_due_date": "31.12.2022",
+      "booster_email_reminder": "true",
+      "booster_reminder_address": "remind.me@email",
+      "comment": "Place taken: hospital"
+}
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+{
+    "id": 10
+}
+ */
+router.put('/:id', async (req, res, next) => {
+  try {
+    // Check that the id is given
+    if (req.params.id == null) {
+      log.warn('id parameter is missing');
+      return next(createError(400, 'Invalid request: id parameter is missing'));
+    }
+
+    // Update dose
+    let updatedFields = await DoseService.updateDose(
+      req.user.id,
+      req.params.id,
+      req.body
+    );
+    return res.status(200).json(updatedFields);
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

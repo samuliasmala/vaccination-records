@@ -129,19 +129,17 @@ router.post(['/', '/create'], async (req, res, next) => {
  */
 router.put(['/', '/update'], ensureAuthenticated, async (req, res, next) => {
   try {
-    let user = req.user;
-
     let newData = getChangedFields(
       ['default_reminder_email', 'year_born'],
       req.body,
-      user
+      req.user
     );
 
     // Check which fields are updated
     if (req.body.new_password != null) {
       let match = await UserService.checkUserPassword(
         req.body.old_password,
-        user.password_hash
+        req.user.password_hash
       );
       if (match) {
         newData.password_hash = await UserService.createHashFromPassword(
@@ -150,7 +148,7 @@ router.put(['/', '/update'], ensureAuthenticated, async (req, res, next) => {
       }
     }
 
-    log.debug(`Updating user`, { id: user.id, newData });
+    log.debug(`Updating user`, { id: req.user.id, newData });
 
     // Update user object if any of the fields were updated
     if (Object.entries(newData).length > 0) {
