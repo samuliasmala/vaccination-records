@@ -37,7 +37,7 @@ const config = convict({
   },
   DATE_FORMAT: {
     env: 'DATE_FORMAT',
-    default: 'D.M.YYYY HH:mm:ss',
+    default: 'D.M.YYYY',
     format: String,
     doc: 'The date format used when parsing date strings'
   }

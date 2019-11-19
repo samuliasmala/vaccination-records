@@ -34,8 +34,8 @@ const DoseService = require('../services/DoseService');
         "vaccine_id": 53,
         "vaccine_name": "Lavantautirokote",
         "vaccine_abbreviation": "Typ",
-        "date_taken": "27.2.1985 00:00:00",
-        "booster_due_date": "31.12.2022 14:27:30",
+        "date_taken": "27.2.1985",
+        "booster_due_date": "31.12.2022",
         "booster_email_reminder": true,
         "booster_reminder_address": "remind.me@email",
         "comment": "Place taken: hospital"
@@ -94,7 +94,7 @@ router.get('/', async (req, res, next) => {
  {
       "vaccine_id": "3",
       "date_taken": "27.2.1985",
-      "booster_due_date": "31.12.2022 14:27:30",
+      "booster_due_date": "31.12.2022",
       "booster_email_reminder": "true",
       "booster_reminder_address": "remind.me@email",
       "comment": "Place taken: hospital"
