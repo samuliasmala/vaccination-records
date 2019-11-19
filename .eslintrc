@@ -7,9 +7,11 @@
       "prettier"
   ],
   "rules": {
+      "no-unused-vars": ["error", { "args": "none" }],
       "prettier/prettier": "error"
   },
   "extends": [
+      "eslint:recommended",
       "plugin:prettier/recommended"
   ]
 }

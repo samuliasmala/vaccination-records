@@ -10,7 +10,8 @@
     "db": "sequelize db:migrate",
     "seed": "sequelize db:seed:all",
     "debugger": "LOG_LEVEL=debug node --inspect-brk=0.0.0.0:9229 ./bin/www",
-    "prettier": "prettier --write '**/*.{js,json,html,md,css,scss}'"
+    "prettier": "prettier --write '**/*.{js,json,html,md,css,scss}'",
+    "lint": "eslint --fix \"**/*.js\""
   },
   "dependencies": {
     "apidoc": "^0.18.0",
