@@ -18,7 +18,10 @@ const doseRoutes = require('./dose');
 
 // Add cors for localhost addresses
 const corsOptions = {
-  origin: [/https?:\/\/localhost(:\d{2,5})?$/],
+  origin: [
+    /https?:\/\/localhost(:\d{2,5})?$/,
+    /vaccine-erecord\.herokuapp\.com$/
+  ],
   credentials: true
 };
 router.use(cors(corsOptions));
