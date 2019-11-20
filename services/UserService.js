@@ -11,7 +11,13 @@ async function findUserById(id) {
   return user;
 }
 
-async function createUser(username, password, reminderEmail, yearBorn) {
+async function createUser(
+  username,
+  password,
+  reminderEmail,
+  yearBorn,
+  reminderDaysBeforeDue
+) {
   log.debug('Creating new user', { username });
 
   // Check if user exists already
@@ -28,7 +34,8 @@ async function createUser(username, password, reminderEmail, yearBorn) {
     username: username,
     password_hash: hash,
     default_reminder_email: reminderEmail,
-    year_born: yearBorn
+    year_born: yearBorn,
+    reminder_days_before_due: reminderDaysBeforeDue
   });
   return user;
 }

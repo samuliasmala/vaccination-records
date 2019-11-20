@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING
       },
       default_reminder_email: DataTypes.STRING,
-      year_born: DataTypes.INTEGER
+      year_born: DataTypes.INTEGER,
+      reminder_days_before_due: DataTypes.INTEGER
     },
     {
       indexes: [

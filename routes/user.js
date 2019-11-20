@@ -19,6 +19,7 @@ const UserService = require('../services/UserService');
  * @apiSuccess {String}   username User's username (i.e. user's primary email)
  * @apiSuccess {String}   default_reminder_email User's default reminder email if not equal to username
  * @apiSuccess {Number}   year_born User's birth year
+ * @apiSuccess {Number}   reminder_days_before_due How many days before the booster dose due date user wants to get the reminder
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -26,7 +27,8 @@ const UserService = require('../services/UserService');
  *       "id": "2",
  *       "username": "samuli",
  *       "default_reminder_email": "samuli.asmala@aalto.fi",
- *       "year_born": "1900"
+ *       "year_born": "1900",
+ *       "reminder_days_before_due": 30
  *     }
  *
  * @apiError (401) UserNotLoggedIn User must log in to access own profile description
@@ -39,12 +41,19 @@ const UserService = require('../services/UserService');
  */
 router.get('/', ensureAuthenticated, (req, res, next) => {
   try {
-    let { id, username, default_reminder_email, year_born } = req.user;
+    let {
+      id,
+      username,
+      default_reminder_email,
+      year_born,
+      reminder_days_before_due
+    } = req.user;
     return res.status(200).json({
       id,
       username,
       default_reminder_email,
-      year_born
+      year_born,
+      reminder_days_before_due
     });
   } catch (err) {
     next(err);
@@ -60,6 +69,7 @@ router.get('/', ensureAuthenticated, (req, res, next) => {
  * @apiParam {String}   password User's password
  * @apiParam {String}   [default_reminder_email] User's default reminder email if not equal to username
  * @apiParam {Number}   [year_born] User's birth year
+ * @apiParam {Number}   [reminder_days_before_due=30] How many days before the booster dose due date user wants to get the reminder
  *
  * @apiParamExample {json} Request-Example:
 {
@@ -77,13 +87,30 @@ router.get('/', ensureAuthenticated, (req, res, next) => {
  */
 router.post(['/', '/create'], async (req, res, next) => {
   try {
-    let { username, password, default_reminder_email, year_born } = req.body;
-    log.debug(`Create user`, { username, default_reminder_email, year_born });
+    let {
+      username,
+      password,
+      default_reminder_email,
+      year_born,
+      reminder_days_before_due
+    } = req.body;
+    log.debug(`Create user`, {
+      username,
+      default_reminder_email,
+      year_born,
+      reminder_days_before_due
+    });
+
+    // Set reminder_days_before_due default value
+    reminder_days_before_due =
+      reminder_days_before_due == null ? 30 : reminder_days_before_due;
+
     let user = await UserService.createUser(
       username,
       password,
       default_reminder_email,
-      year_born
+      year_born,
+      reminder_days_before_due
     );
     if (user != null && user.error == null) {
       log.info(`New user created`, { id: user.id, username: user.username });
@@ -109,6 +136,7 @@ router.post(['/', '/create'], async (req, res, next) => {
  * @apiParam {String}   [old_password] User's old password
  * @apiParam {String}   [default_reminder_email] User's default reminder email if not equal to username
  * @apiParam {Number}   [year_born] User's birth year
+ * @apiParam {Number}   [reminder_days_before_due] How many days before the booster dose due date user wants to get the reminder
  *
  * @apiParamExample {json} Request-Example:
 {
@@ -130,7 +158,7 @@ router.post(['/', '/create'], async (req, res, next) => {
 router.put(['/', '/update'], ensureAuthenticated, async (req, res, next) => {
   try {
     let newData = getChangedFields(
-      ['default_reminder_email', 'year_born'],
+      ['default_reminder_email', 'year_born', 'reminder_days_before_due'],
       req.body,
       req.user
     );
