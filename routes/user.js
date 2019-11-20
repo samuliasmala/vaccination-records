@@ -16,8 +16,8 @@ const UserService = require('../services/UserService');
  * @apiDescription Get details of the current (logged in) user
  *
  * @apiSuccess {Number}   id id of the user
- * @apiSuccess {String}   username User's username (i.e. user's primary email)
- * @apiSuccess {String}   default_reminder_email User's default reminder email if not equal to username
+ * @apiSuccess {String}   email User's email
+ * @apiSuccess {String}   default_reminder_email User's default reminder email if not equal to the primary email
  * @apiSuccess {Number}   year_born User's birth year
  * @apiSuccess {Number}   reminder_days_before_due How many days before the booster dose due date user wants to get the reminder
  *
@@ -25,7 +25,7 @@ const UserService = require('../services/UserService');
  *     HTTP/1.1 200 OK
  *     {
  *       "id": "2",
- *       "username": "samuli",
+ *       "email": "samuli",
  *       "default_reminder_email": "samuli.asmala@aalto.fi",
  *       "year_born": "1900",
  *       "reminder_days_before_due": 30
@@ -50,7 +50,7 @@ router.get('/', ensureAuthenticated, (req, res, next) => {
     } = req.user;
     return res.status(200).json({
       id,
-      username,
+      email: username,
       default_reminder_email,
       year_born,
       reminder_days_before_due
@@ -65,15 +65,15 @@ router.get('/', ensureAuthenticated, (req, res, next) => {
  * @apiName CreateUser
  * @apiGroup User
  *
- * @apiParam {String}   username User's username (i.e. user's primary email)
+ * @apiParam {String}   email User's email
  * @apiParam {String}   password User's password
- * @apiParam {String}   [default_reminder_email] User's default reminder email if not equal to username
+ * @apiParam {String}   [default_reminder_email] User's default reminder email if not equal to the primary email
  * @apiParam {Number}   [year_born] User's birth year
  * @apiParam {Number}   [reminder_days_before_due=30] How many days before the booster dose due date user wants to get the reminder
  *
  * @apiParamExample {json} Request-Example:
 {
-  "username": "samuli.testing",
+  "email": "samuli.testing",
   "password": "salasana",
   "default_reminder_email": "address@email",
   "year_born": 1905
@@ -88,14 +88,14 @@ router.get('/', ensureAuthenticated, (req, res, next) => {
 router.post(['/', '/create'], async (req, res, next) => {
   try {
     let {
-      username,
+      email,
       password,
       default_reminder_email,
       year_born,
       reminder_days_before_due
     } = req.body;
     log.debug(`Create user`, {
-      username,
+      username: email,
       default_reminder_email,
       year_born,
       reminder_days_before_due
@@ -106,7 +106,7 @@ router.post(['/', '/create'], async (req, res, next) => {
       reminder_days_before_due == null ? 30 : reminder_days_before_due;
 
     let user = await UserService.createUser(
-      username,
+      email,
       password,
       default_reminder_email,
       year_born,
@@ -134,7 +134,7 @@ router.post(['/', '/create'], async (req, res, next) => {
  *
  * @apiParam {String}   [new_password] User's new password, old password required to update the password
  * @apiParam {String}   [old_password] User's old password
- * @apiParam {String}   [default_reminder_email] User's default reminder email if not equal to username
+ * @apiParam {String}   [default_reminder_email] User's default reminder email if not equal to the primary email
  * @apiParam {Number}   [year_born] User's birth year
  * @apiParam {Number}   [reminder_days_before_due] How many days before the booster dose due date user wants to get the reminder
  *

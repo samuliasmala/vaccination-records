@@ -14,7 +14,7 @@ const log = require('../utils/logger');
  *
  * @apiParamExample {json} Request-Example:
 {
-  "username": "samuli.testaa",
+  "username": "samuli.testaa@testi.com",
   "password": "salasana"
 }
  *
@@ -70,7 +70,9 @@ router.post('/login', (req, res, next) => {
  *     }
  */
 router.get('/logout', (req, res, next) => {
-  log.debug(`User logging out`, { username: req.user.username });
+  log.debug(`User logging out`, {
+    username: req && req.user && req.user.username
+  });
 
   req.logout();
   return res.status(200).json({ status: 'Logged out' });
