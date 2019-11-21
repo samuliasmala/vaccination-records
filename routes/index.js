@@ -3,6 +3,7 @@ const cors = require('cors');
 
 const router = express.Router();
 const { ensureAuthenticated } = require('../utils/middlewares');
+const log = require('../utils/logger');
 
 const authRoutes = require('./auth');
 const userRoutes = require('./user');
@@ -11,10 +12,10 @@ const doseRoutes = require('./dose');
 
 // Log all API calls
 // Currently handled by Morgan
-/*router.use('*', (req, _, next) => {
-  log.http(`Call to API: ${req.originalUrl}`);
+router.use('*', (req, _, next) => {
+  log.http(`Call to API: ${req.originalUrl}`, { sessionId: req.sessionID });
   next();
-});*/
+});
 
 // Add cors for localhost addresses
 const corsOptions = {
