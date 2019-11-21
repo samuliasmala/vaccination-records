@@ -18,7 +18,7 @@ const config = convict({
   },
   LOG_LEVEL: {
     env: 'LOG_LEVEL',
-    default: 'info',
+    default: 'debug',
     format: ['error', 'warn', 'info', 'debug', 'trace'],
     doc: 'The application logging level.'
   },
