@@ -35,6 +35,12 @@ const config = convict({
     format: String,
     doc: 'The session secret to encrypt cookie'
   },
+  MAILGUN_API_KEY: {
+    env: 'MAILGUN_API_KEY',
+    default: '',
+    format: String,
+    doc: 'Mailgun api key for sending emails'
+  },
   DATE_FORMAT: {
     env: 'DATE_FORMAT',
     default: 'D.M.YYYY',
