@@ -3,6 +3,7 @@ const createError = require('http-errors');
 const router = express.Router();
 
 const log = require('../utils/logger');
+const mailgun = require('../utils/mailgun');
 const { ensureAuthenticated } = require('../utils/middlewares');
 const { getChangedFields } = require('../utils/utils');
 
@@ -64,6 +65,7 @@ router.get('/', ensureAuthenticated, (req, res, next) => {
  * @api {post} /user Create new user
  * @apiName CreateUser
  * @apiGroup User
+ * @apiDescription Create a new user and send an email to user's email address to confirm the registration
  *
  * @apiParam {String}   email User's email
  * @apiParam {String}   password User's password
@@ -114,6 +116,19 @@ router.post(['/', '/create'], async (req, res, next) => {
     );
     if (user != null && user.error == null) {
       log.info(`New user created`, { id: user.id, username: user.username });
+
+      // Form and send email
+      let msg = {
+        to: user.username,
+        subject: 'Welcome to Vaccination eRecord',
+        text: `Hi and welcome to Vaccination eRecord!
+
+We hope this service will be highly useful! If you have any questions or feedback please don't hesitate to contact us at info@rokotuskortti.com!
+
+Best regards,
+The Vaccination eRecord team`
+      };
+      await mailgun.send(msg);
       return res.status(200).json({
         id: user.id
       });
