@@ -20,7 +20,8 @@ const doseRoutes = require('./dose');
 const corsOptions = {
   origin: [
     /https?:\/\/localhost(:\d{2,5})?$/,
-    /vaccine-erecord\.herokuapp\.com$/
+    /vaccine-erecord\.herokuapp\.com$/,
+    /www\.rokotuskortti\.com$/
   ],
   credentials: true
 };
