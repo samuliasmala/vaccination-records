@@ -41,6 +41,14 @@ const config = convict({
     format: String,
     doc: 'Mailgun api key for sending emails'
   },
+  // Constant not probably modified using environment variable
+  DEFAULT_REMINDER_DAYS: {
+    env: 'DEFAULT_REMINDER_DAYS',
+    default: 30,
+    format: 'int',
+    doc:
+      'Default value for the amount of days before booster reminder emails are sent'
+  },
   DATE_FORMAT: {
     env: 'DATE_FORMAT',
     default: 'D.M.YYYY',

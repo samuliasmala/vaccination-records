@@ -31,7 +31,7 @@ async function checkAndSendBoosterReminders() {
         // Send reminder if booster date closer than specified warning time
         let reminderDaysBefore = dose.User.get('reminder_days_before_due');
         if (reminderDaysBefore == null) {
-          reminderDaysBefore = 30;
+          reminderDaysBefore = config.get('DEFAULT_REMINDER_DAYS');
         }
         if (moment().diff(date, 'days') >= reminderDaysBefore) {
           let msg = {

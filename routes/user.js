@@ -3,6 +3,7 @@ const createError = require('http-errors');
 const router = express.Router();
 
 const log = require('../utils/logger');
+const config = require('../config');
 const mailgun = require('../utils/mailgun');
 const { ensureAuthenticated } = require('../utils/middlewares');
 const { getChangedFields } = require('../utils/utils');
@@ -105,7 +106,9 @@ router.post(['/', '/create'], async (req, res, next) => {
 
     // Set reminder_days_before_due default value
     reminder_days_before_due =
-      reminder_days_before_due == null ? 30 : reminder_days_before_due;
+      reminder_days_before_due == null
+        ? config.get('DEFAULT_REMINDER_DAYS')
+        : reminder_days_before_due;
 
     let user = await UserService.createUser(
       email,
