@@ -1,4 +1,5 @@
 const express = require('express');
+const helmet = require('helmet');
 const createError = require('http-errors');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -15,6 +16,7 @@ const log = require('./utils/logger');
 const sendBoosterReminders = require('./utils/sendBoosterReminders');
 const app = express();
 
+app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
