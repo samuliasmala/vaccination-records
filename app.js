@@ -42,6 +42,18 @@ setupPassport(passport);
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 
+// Handle passport deserialization errors
+// Happens e.g. if user is logged in while deleted from db
+app.use(function(err, req, res, next) {
+  if (err) {
+    log.warn('Unknonwn user id requested, logging user out.', {
+      msg: err.message
+    });
+    req.logout();
+  }
+  next(); // never redirect login page to itself
+});
+
 // Add API routes
 app.use('/api', routes);
 
