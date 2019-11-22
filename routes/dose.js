@@ -1,5 +1,6 @@
 const express = require('express');
 const createError = require('http-errors');
+const { check, validationResult } = require('express-validator');
 const moment = require('moment-timezone');
 const router = express.Router();
 
@@ -107,45 +108,69 @@ router.get('/', async (req, res, next) => {
     "id": 10
 }
  */
-router.post('/', async (req, res, next) => {
-  try {
-    let {
-      vaccine_id,
-      date_taken,
-      booster_due_date,
-      booster_email_reminder,
-      booster_reminder_address,
-      comment
-    } = req.body;
-    log.debug(`Create a new dose`);
+router.post(
+  '/',
+  [
+    check('vaccine_id').isInt(),
+    // date must be a valid date
+    check('date_taken').custom(value =>
+      moment(value, config.get('DATE_FORMAT')).isValid()
+    ),
+    check('booster_due_date')
+      .optional()
+      .custom(value => moment(value, config.get('DATE_FORMAT')).isValid()),
+    check('booster_email_reminder')
+      .optional()
+      .isBoolean(),
+    check('booster_reminder_address')
+      .optional()
+      .isEmail()
+  ],
+  async (req, res, next) => {
+    try {
+      // Finds the validation errors in this request and wraps them in an object with handy functions
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+      }
+      let {
+        vaccine_id,
+        date_taken,
+        booster_due_date,
+        booster_email_reminder,
+        booster_reminder_address,
+        comment
+      } = req.body;
+      log.debug(`Create a new dose`);
 
-    // Parse dates and boolean
-    date_taken = moment(date_taken, config.get('DATE_FORMAT'));
-    booster_due_date = moment(booster_due_date, config.get('DATE_FORMAT'));
-    booster_email_reminder = booster_email_reminder ? true : false;
+      // Parse dates and boolean
+      date_taken = moment(date_taken, config.get('DATE_FORMAT'));
+      booster_due_date = moment(booster_due_date, config.get('DATE_FORMAT'));
+      booster_email_reminder = booster_email_reminder ? true : false;
 
-    let dose = await DoseService.createDose(
-      req.user.id,
-      vaccine_id,
-      date_taken,
-      booster_due_date,
-      booster_email_reminder,
-      booster_reminder_address,
-      comment
-    );
-    if (dose != null) {
-      log.info(`New dose created`, { id: dose.id, name: dose.name });
-      return res.status(200).json({
-        id: dose.id
-      });
-    } else {
-      log.info(`Unable to create a dose`);
-      next(createError(400));
+      let dose = await DoseService.createDose(
+        req.user.id,
+        vaccine_id,
+        date_taken,
+        booster_due_date,
+        booster_email_reminder,
+        booster_reminder_address,
+        comment
+      );
+      if (dose != null) {
+        log.info(`New dose created`, { id: dose.id, name: dose.name });
+        return res.status(200).json({
+          id: dose.id
+        });
+      } else {
+        log.info(`Unable to create a dose`);
+        next(createError(400));
+      }
+    } catch (err) {
+      next(err);
     }
-  } catch (err) {
-    next(err);
   }
-});
+);
 
 /**
  * @api {put} /dose/:id Update dose
@@ -173,25 +198,55 @@ router.post('/', async (req, res, next) => {
     "comment": true
 }
  */
-router.put('/:id', async (req, res, next) => {
-  try {
-    // Check that the id is given
-    if (req.params.id == null) {
-      log.warn('id parameter is missing');
-      return next(createError(400, 'Invalid request: id parameter is missing'));
-    }
+router.put(
+  '/:id',
+  [
+    check('id').isInt(),
+    check('vaccine_id')
+      .optional()
+      .isInt(),
+    // date must be a valid date
+    check('date_taken')
+      .optional()
+      .custom(value => moment(value, config.get('DATE_FORMAT')).isValid()),
+    check('booster_due_date')
+      .optional()
+      .custom(value => moment(value, config.get('DATE_FORMAT')).isValid()),
+    check('booster_email_reminder')
+      .optional()
+      .isBoolean(),
+    check('booster_reminder_address')
+      .optional()
+      .isEmail()
+  ],
+  async (req, res, next) => {
+    try {
+      // Finds the validation errors in this request and wraps them in an object with handy functions
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+      }
 
-    // Update dose
-    let updatedFields = await DoseService.updateDose(
-      req.user.id,
-      req.params.id,
-      req.body
-    );
-    return res.status(200).json(updatedFields);
-  } catch (err) {
-    next(err);
+      // Check that the id is given
+      if (req.params.id == null) {
+        log.warn('id parameter is missing');
+        return next(
+          createError(400, 'Invalid request: id parameter is missing')
+        );
+      }
+
+      // Update dose
+      let updatedFields = await DoseService.updateDose(
+        req.user.id,
+        req.params.id,
+        req.body
+      );
+      return res.status(200).json(updatedFields);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 /**
  * @api {delete} /dose/:id Delete dose
