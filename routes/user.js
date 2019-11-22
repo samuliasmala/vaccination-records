@@ -1,5 +1,6 @@
 const express = require('express');
 const createError = require('http-errors');
+const { check, validationResult } = require('express-validator');
 const router = express.Router();
 
 const log = require('../utils/logger');
@@ -88,61 +89,86 @@ router.get('/', ensureAuthenticated, (req, res, next) => {
  *      "id": 5
  *     }
  */
-router.post(['/', '/create'], async (req, res, next) => {
-  try {
-    let {
-      email,
-      password,
-      default_reminder_email,
-      year_born,
-      reminder_days_before_due
-    } = req.body;
-    log.debug(`Create user`, {
-      username: email,
-      default_reminder_email,
-      year_born,
-      reminder_days_before_due
-    });
+router.post(
+  ['/', '/create'],
+  [
+    // email must be a valid email
+    check('email').isEmail(),
+    // password must be at least 5 chars long
+    check('password').isLength({ min: 5 }),
+    // check optional parameter only if it exits
+    check('default_reminder_email')
+      .optional()
+      .isEmail(),
+    check('year_born')
+      .optional()
+      .isInt({ min: 1800, max: new Date().getFullYear() }),
+    check('reminder_days_before_due')
+      .optional()
+      .isInt()
+  ],
+  async (req, res, next) => {
+    try {
+      // Finds the validation errors in this request and wraps them in an object with handy functions
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+      }
 
-    // Set reminder_days_before_due default value
-    reminder_days_before_due =
-      reminder_days_before_due == null
-        ? config.get('DEFAULT_REMINDER_DAYS')
-        : reminder_days_before_due;
+      let {
+        email,
+        password,
+        default_reminder_email,
+        year_born,
+        reminder_days_before_due
+      } = req.body;
+      log.debug(`Create user`, {
+        username: email,
+        default_reminder_email,
+        year_born,
+        reminder_days_before_due
+      });
 
-    let user = await UserService.createUser(
-      email,
-      password,
-      default_reminder_email,
-      year_born,
-      reminder_days_before_due
-    );
-    if (user != null && user.error == null) {
-      log.info(`New user created`, { id: user.id, username: user.username });
+      // Set reminder_days_before_due default value
+      reminder_days_before_due =
+        reminder_days_before_due == null
+          ? config.get('DEFAULT_REMINDER_DAYS')
+          : reminder_days_before_due;
 
-      // Form and send email
-      let msg = {
-        to: user.username,
-        subject: 'Welcome to Vaccination eRecord',
-        text: `Hi and welcome to Vaccination eRecord!
+      let user = await UserService.createUser(
+        email,
+        password,
+        default_reminder_email,
+        year_born,
+        reminder_days_before_due
+      );
+      if (user != null && user.error == null) {
+        log.info(`New user created`, { id: user.id, username: user.username });
+
+        // Form and send email
+        let msg = {
+          to: user.username,
+          subject: 'Welcome to Vaccination eRecord',
+          text: `Hi and welcome to Vaccination eRecord!
 
 We hope this service will be highly useful! If you have any questions or feedback please don't hesitate to contact us at info@rokotuskortti.com!
 
 Best regards,
 The Vaccination eRecord team`
-      };
-      await mailgun.send(msg);
-      return res.status(200).json({
-        id: user.id
-      });
-    } else {
-      log.info(`Unable to create user: ${user.message}`);
-      next(createError(400, user.message));
+        };
+        await mailgun.send(msg);
+        return res.status(200).json({
+          id: user.id
+        });
+      } else {
+        log.info(`Unable to create user: ${user.message}`);
+        next(createError(400, user.message));
+      }
+    } catch (err) {
+      next(err);
     }
-  } catch (err) {
-    next(err);
   }
-});
+);
 
 /**
  * @api {put} /user Update user details
@@ -173,49 +199,75 @@ The Vaccination eRecord team`
     "year_born": true
 }
  */
-router.put(['/', '/update'], ensureAuthenticated, async (req, res, next) => {
-  try {
-    let newData = getChangedFields(
-      ['default_reminder_email', 'year_born', 'reminder_days_before_due'],
-      req.body,
-      req.user
-    );
+router.put(
+  ['/', '/update'],
+  [
+    // password must be at least 5 chars long
+    check('new_password')
+      .optional()
+      .isLength({ min: 5 }),
+    // check optional parameter only if it exits
+    check('default_reminder_email')
+      .optional()
+      .isEmail(),
+    check('year_born')
+      .optional()
+      .isInt({ min: 1800, max: new Date().getFullYear() }),
+    check('reminder_days_before_due')
+      .optional()
+      .isInt()
+  ],
+  ensureAuthenticated,
+  async (req, res, next) => {
+    try {
+      // Finds the validation errors in this request and wraps them in an object with handy functions
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+      }
 
-    // Check which fields are updated
-    if (req.body.new_password != null) {
-      let match = await UserService.checkUserPassword(
-        req.body.old_password,
-        req.user.password_hash
+      let newData = getChangedFields(
+        ['default_reminder_email', 'year_born', 'reminder_days_before_due'],
+        req.body,
+        req.user
       );
-      if (match) {
-        newData.password_hash = await UserService.createHashFromPassword(
-          req.body.new_password
+
+      // Check which fields are updated
+      if (req.body.new_password != null) {
+        let match = await UserService.checkUserPassword(
+          req.body.old_password,
+          req.user.password_hash
         );
+        if (match) {
+          newData.password_hash = await UserService.createHashFromPassword(
+            req.body.new_password
+          );
+        }
       }
-    }
 
-    log.debug(`Updating user`, { id: req.user.id, newData });
+      log.debug(`Updating user`, { id: req.user.id, newData });
 
-    // Update user object if any of the fields were updated
-    if (Object.entries(newData).length > 0) {
-      let userDb = await UserService.findUserById(req.user.id);
+      // Update user object if any of the fields were updated
+      if (Object.entries(newData).length > 0) {
+        let userDb = await UserService.findUserById(req.user.id);
 
-      if (userDb == null) {
-        log.warn('User not found from DB when updating', { id: req.user.id });
-        return next(createError(404, 'User not found'));
+        if (userDb == null) {
+          log.warn('User not found from DB when updating', { id: req.user.id });
+          return next(createError(404, 'User not found'));
+        }
+        await userDb.update(newData);
       }
-      await userDb.update(newData);
-    }
 
-    let status = {};
-    for (let i in newData) {
-      status[i] = true;
-    }
+      let status = {};
+      for (let i in newData) {
+        status[i] = true;
+      }
 
-    return res.status(200).json(status);
-  } catch (err) {
-    next(err);
+      return res.status(200).json(status);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 module.exports = router;
