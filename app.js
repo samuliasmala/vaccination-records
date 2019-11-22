@@ -12,6 +12,7 @@ const routes = require('./routes');
 const setupPassport = require('./utils/passport');
 const config = require(path.resolve('config.js'));
 const log = require('./utils/logger');
+const sendBoosterReminders = require('./utils/sendBoosterReminders');
 const app = express();
 
 app.use(morgan('dev'));
@@ -32,6 +33,9 @@ app.use(
     saveUninitialized: true
   })
 );
+
+// Initialize booster email check
+sendBoosterReminders(5);
 
 // Setup passport
 setupPassport(passport);
