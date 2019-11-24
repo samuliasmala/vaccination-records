@@ -2,6 +2,7 @@ const express = require('express');
 const createError = require('http-errors');
 const { check, validationResult } = require('express-validator');
 const moment = require('moment-timezone');
+
 const router = express.Router();
 
 const config = require('../config');
@@ -63,12 +64,18 @@ router.get('/', async (req, res, next) => {
           vaccine_id: dose.Vaccine.get('id'),
           vaccine_name: dose.Vaccine.get('name'),
           vaccine_abbreviation: dose.Vaccine.get('abbreviation'),
-          date_taken: moment(dose.get('date_taken')).format(
-            config.get('DATE_FORMAT')
-          ),
-          booster_due_date: moment(dose.get('booster_due_date')).format(
-            config.get('DATE_FORMAT')
-          ),
+          date_taken:
+            dose.get('date_taken') == null
+              ? null
+              : moment(dose.get('date_taken')).format(
+                  config.get('DATE_FORMAT')
+                ),
+          booster_due_date:
+            dose.get('booster_due_date') == null
+              ? null
+              : moment(dose.get('booster_due_date')).format(
+                  config.get('DATE_FORMAT')
+                ),
           booster_email_reminder: dose.get('booster_email_reminder'),
           booster_reminder_address: dose.get('booster_reminder_address'),
           comment: dose.get('comment')
@@ -145,7 +152,9 @@ router.post(
 
       // Parse dates and boolean
       date_taken = moment(date_taken, config.get('DATE_FORMAT'));
-      booster_due_date = moment(booster_due_date, config.get('DATE_FORMAT'));
+      if (booster_due_date != null) {
+        booster_due_date = moment(booster_due_date, config.get('DATE_FORMAT'));
+      }
       booster_email_reminder = booster_email_reminder ? true : false;
 
       let dose = await DoseService.createDose(
