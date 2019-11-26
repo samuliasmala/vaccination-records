@@ -7,7 +7,7 @@ const log = require('../utils/logger');
 const config = require('../config');
 const mailgun = require('../utils/mailgun');
 const { ensureAuthenticated } = require('../utils/middlewares');
-const { getChangedFields } = require('../utils/utils');
+const { getChangedFields, emptyStrToNullSanitizer } = require('../utils/utils');
 
 const UserService = require('../services/UserService');
 
@@ -208,10 +208,12 @@ router.put(
       .isLength({ min: 5 }),
     // check optional parameter only if it exits
     check('default_reminder_email')
-      .optional()
+      .customSanitizer(emptyStrToNullSanitizer)
+      .optional({ nullable: true })
       .isEmail(),
     check('year_born')
-      .optional()
+      .customSanitizer(emptyStrToNullSanitizer)
+      .optional({ nullable: true })
       .isInt({ min: 1800, max: new Date().getFullYear() }),
     check('reminder_days_before_due')
       .optional()
