@@ -6,7 +6,7 @@ const mailgun = require('./mailgun');
 const { Dose, User, Vaccine } = require('../models');
 
 function sendBoosterReminders(checkFrequencyMins) {
-  log.info('Doint the initial booster reminder check');
+  log.info('Doing the initial booster reminder check');
   checkAndSendBoosterReminders();
   log.debug(
     `Setting booster reminder check for every ${checkFrequencyMins} minutes`
@@ -35,7 +35,8 @@ async function checkAndSendBoosterReminders() {
         }
         if (date.diff(moment(), 'days') < reminderDaysBefore) {
           let msg = {
-            to: dose.get('booster_reminder_address'),
+            to:
+              dose.get('booster_reminder_address') || dose.User.get('username'),
             subject: `Remember to take your booster vaccine!`,
             text: `Hello from Vaccination eRecord!
 
