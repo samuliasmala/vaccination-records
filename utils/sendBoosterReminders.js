@@ -33,7 +33,7 @@ async function checkAndSendBoosterReminders() {
         if (reminderDaysBefore == null) {
           reminderDaysBefore = config.get('DEFAULT_REMINDER_DAYS');
         }
-        if (moment().diff(date, 'days') >= reminderDaysBefore) {
+        if (date.diff(moment(), 'days') < reminderDaysBefore) {
           let msg = {
             to: dose.get('booster_reminder_address'),
             subject: `Remember to take your booster vaccine!`,
