@@ -75,13 +75,18 @@ function replaceAll(target, search, replacement) {
   }
 }
 
+function emptyStrToNullSanitizer(value) {
+  return value === '' ? null : value;
+}
+
 module.exports = {
   getChangedFields,
   formatDate,
-  isString: isString,
-  isArray: isArray,
-  isNumber: isNumber,
-  isNumeric: isNumeric,
-  isInt: isInt,
-  replaceAll: replaceAll
+  isString,
+  isArray,
+  isNumber,
+  isNumeric,
+  isInt,
+  replaceAll,
+  emptyStrToNullSanitizer
 };
