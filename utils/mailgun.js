@@ -33,7 +33,7 @@ function send(msg) {
   }
 
   if (msg.from == null) {
-    msg.from = 'noreply@rokotuskortti.com';
+    msg.from = 'noreply@mg.rokotuskortti.com';
     log.debug('Using default from address ', { from: msg.from });
   }
 
