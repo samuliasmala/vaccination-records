@@ -98,10 +98,12 @@ router.post(
     check('password').isLength({ min: 5 }),
     // check optional parameter only if it exits
     check('default_reminder_email')
-      .optional()
+      .customSanitizer(emptyStrToNullSanitizer)
+      .optional({ nullable: true })
       .isEmail(),
     check('year_born')
-      .optional()
+      .customSanitizer(emptyStrToNullSanitizer)
+      .optional({ nullable: true })
       .isInt({ min: 1800, max: new Date().getFullYear() }),
     check('reminder_days_before_due')
       .optional()
@@ -122,18 +124,23 @@ router.post(
         year_born,
         reminder_days_before_due
       } = req.body;
-      log.debug(`Create user`, {
-        username: email,
-        default_reminder_email,
-        year_born,
-        reminder_days_before_due
-      });
 
       // Set reminder_days_before_due default value
       reminder_days_before_due =
         reminder_days_before_due == null
           ? config.get('DEFAULT_REMINDER_DAYS')
           : reminder_days_before_due;
+
+      // If default reminder email not provided set to user's primary email
+      default_reminder_email =
+        default_reminder_email == null ? email : default_reminder_email;
+
+      log.debug(`Create user`, {
+        username: email,
+        default_reminder_email,
+        year_born,
+        reminder_days_before_due
+      });
 
       let user = await UserService.createUser(
         email,
