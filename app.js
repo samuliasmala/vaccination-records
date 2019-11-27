@@ -29,7 +29,7 @@ app.use(
     store: new SequelizeStore({
       db: sequelize,
       checkExpirationInterval: 5 * 60 * 1000, // The interval at which to cleanup expired sessions in milliseconds (5 minutes)
-      expiration: 4 * 60 * 60 * 1000 // The maximum age (in milliseconds) of a valid session (4 hours)
+      expiration: 1 * 60 * 60 * 1000 // The maximum age (in milliseconds) of a valid session (1 hours)
     }),
     resave: false, // SequelizeStore supports the touch method so per the express-session docs this should be set to false
     saveUninitialized: true
