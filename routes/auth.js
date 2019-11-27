@@ -50,7 +50,7 @@ router.post('/login', (req, res, next) => {
           username: username,
           session: req.session.id.slice(0, 6)
         });
-        return res.status(200).json({ status: 'Authorized' });
+        return res.status(200).json({ id: user.id, status: 'Authorized' });
       });
     })(req, res, next);
   } catch (err) {
