@@ -5,7 +5,7 @@ import { RootState } from "../redux/reducers";
 import { mapToUser, mapVaccineFormStateToPayload } from "./data-mapper";
 
 export const register = (user: UserAuth): Promise<Response> => {
-    return fetch("https://vaccine-backend.herokuapp.com/api/user/create", {
+    return fetch("/api/user/create", {
         method: "POST",
         headers: {
             Accept: "application/json",
@@ -22,7 +22,7 @@ export const register = (user: UserAuth): Promise<Response> => {
 };
 
 export const login = (user: UserAuth): Promise<Response> => {
-    return fetch("https://vaccine-backend.herokuapp.com/api/login", {
+    return fetch("/api/login", {
         method: "POST",
         headers: {
             Accept: "application/json",
@@ -39,7 +39,7 @@ export const login = (user: UserAuth): Promise<Response> => {
 };
 
 export const logout = (): Promise<Response> => {
-    return fetch("https://vaccine-backend.herokuapp.com/api/logout", {
+    return fetch("/api/logout", {
         method: "GET",
         headers: {
             Accept: "application/json",
@@ -55,7 +55,7 @@ export const checkLoggedIn = (): Promise<RootState> => {
     const initialState = {
         session: {}
     };
-    return fetch("https://vaccine-backend.herokuapp.com/api/user", {
+    return fetch("/api/user", {
         method: "GET",
         headers: {
             Accept: "application/json",
@@ -81,7 +81,7 @@ export const checkLoggedIn = (): Promise<RootState> => {
 
 export function createNewVaccineEntry(values: VaccineFormState): Promise<number> {
     const payload = mapVaccineFormStateToPayload(values);
-    return fetch("https://vaccine-backend.herokuapp.com/api/dose", {
+    return fetch("/api/dose", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -96,7 +96,7 @@ export function createNewVaccineEntry(values: VaccineFormState): Promise<number>
 
 export async function updateVaccineEntry(values: VaccineFormState): Promise<number> {
     const payload = mapVaccineFormStateToPayload(values);
-    return fetch(`https://vaccine-backend.herokuapp.com/api/dose/${values.id}`, {
+    return fetch(`/api/dose/${values.id}`, {
         method: "PUT",
         credentials: "include",
         headers: {

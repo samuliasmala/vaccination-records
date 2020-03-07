@@ -65,7 +65,7 @@ class VaccineList extends React.Component<Props, State> {
     }
 
     getVaccines = (): void => {
-        fetch("https://vaccine-backend.herokuapp.com/api/dose", {
+        fetch("/api/dose", {
             method: "GET",
             headers: {
                 Accept: "application/json",
@@ -93,7 +93,7 @@ class VaccineList extends React.Component<Props, State> {
     };
 
     getUser = (): void => {
-        fetch("https://vaccine-backend.herokuapp.com/api/user", {
+        fetch("/api/user", {
             method: "GET",
             credentials: "include",
             headers: {
@@ -121,7 +121,7 @@ class VaccineList extends React.Component<Props, State> {
     };
 
     getVaccineTypeOptions = (): void => {
-        fetch("https://vaccine-backend.herokuapp.com/api/vaccine", {
+        fetch("/api/vaccine", {
             method: "GET",
             credentials: "include",
             headers: {
@@ -164,7 +164,7 @@ class VaccineList extends React.Component<Props, State> {
     };
 
     deleteVaccine = (id: number): void => {
-        fetch(`https://vaccine-backend.herokuapp.com/api/dose/${id}`, {
+        fetch(`/api/dose/${id}`, {
             method: "DELETE",
             headers: {
                 Accept: "application/json",

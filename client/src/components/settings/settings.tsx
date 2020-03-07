@@ -75,7 +75,7 @@ class Settings extends React.Component<Props, State> {
     }
 
     getData = (): void => {
-        fetch("https://vaccine-backend.herokuapp.com/api/user", {
+        fetch("/api/user", {
             method: "GET",
             credentials: "include",
             headers: {
@@ -104,7 +104,7 @@ class Settings extends React.Component<Props, State> {
     };
 
     pushData = (values: AccountSettingsFormState): void => {
-        fetch("https://vaccine-backend.herokuapp.com/api/user", {
+        fetch("/api/user", {
             method: "PUT",
             credentials: "include",
             headers: {
