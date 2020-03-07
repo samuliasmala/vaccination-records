@@ -60,8 +60,8 @@ app.use(function(err, req, res, next) {
 app.use('/api', routes);
 
 // Forward bare domain to apidoc
-app.get('/', (req, res) => res.redirect('/apidoc/'));
 app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, 'client', 'build')));
 
 app.use(function(req, res, next) {
   next(createError(404));

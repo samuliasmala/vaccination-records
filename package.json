@@ -6,7 +6,7 @@
     "prestart": "sequelize db:migrate",
     "start": "node ./bin/www",
     "dev": "LOG_LEVEL=debug nodemon ./bin/www",
-    "build": "rm -rf bu && apidoc -i routes/ -o build/apidoc/ && sed -i 's|<body class=\"container-fluid\">|<body>|g' build/apidoc/index.html",
+    "build": "rm -rf build && apidoc -i routes/ -o build/apidoc/ && sed -i 's|<body class=\"container-fluid\">|<body>|g' build/apidoc/index.html",
     "db": "sequelize db:migrate",
     "seed": "sequelize db:seed:all",
     "debugger": "LOG_LEVEL=debug node --inspect-brk=0.0.0.0:9229 ./bin/www",
