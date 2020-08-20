@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "apidoc": "^0.18.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "connect-session-sequelize": "^6.0.0",
     "convict": "^5.1.0",
     "cookie-parser": "~1.4.4",
